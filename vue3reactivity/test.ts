@@ -14,12 +14,14 @@ effect(() => {
     total = data.price * data.amount
 })
 
-console.log(total)
+test('vue3 reactivity', () => {
+    expect(total).toBe(1)
 
-data.price = 5
+    data.price = 5
 
-console.log(total)
+    expect(total).toBe(5)
 
-data.amount = 10
+    data.amount = 10
 
-console.log(total)
+    expect(total).toBe(50)
+})
