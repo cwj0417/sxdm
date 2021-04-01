@@ -1,0 +1,1 @@
+vue2 keep-alive队列, get过就更新到队尾, put的时候超过capacity就移除最老的.
