@@ -1,14 +1,14 @@
 ##  作用域, this相关
 
-+   bind: 接受`需要固定的this`, 返回一个函数. 使用apply/call把this固定住, 其他参数透传就行了.
++   bind: 接受`需要固定的this`, 返回一个函数. 使用apply/call把this固定住, 其他参数透传就行了.
 +   aplly: 利用`谁调用谁就是this`的原理, 让方法自己 成为 需要成为this的对象 的一个属性, 然后调用. 调用完销毁这个属性就可以.
 
 ##  原型相关
 
 原型相关的东西例子有互相用到, 所以写在同一个文件里.
 
-+   new操作符. 三步走: 新建个对象, 把构造器的prototype设为他的prototype, 调用构造器
-+   Object.create. 创建一个对象, 把他的prototype设为传入的参数.
++   new操作符. 三步走: 新建个对象, 把构造器的prototype设为他的prototype, 调用构造器
++   Object.create. 创建一个对象, 把他的prototype设为传入的参数.
 +   instanceof. 看看prototype是不是构造器的prototype, 如果不是 就往上找, 直到null就认为不是instance.
 
 具体实现, 可以有很多种写法, 所以要理解几个相关的知识点:
