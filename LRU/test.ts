@@ -9,5 +9,4 @@ test('lru', () => {
     expect(cache.get(1)).toBe(2);
     cache.put(4, 2);
     expect(cache.get(2)).toBe(false);
-    console.log(cache)
 })

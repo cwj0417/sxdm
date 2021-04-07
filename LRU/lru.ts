@@ -7,7 +7,7 @@ export class LRUCache<T = any, K extends number | string = number> {
     constructor(private capacity: number) {}
 
     get (key: K) {
-        if (this.keys.indexOf(key) > -1) {
+        if (this.keys.includes(key)) {
             this.keys.splice(this.keys.indexOf(key), 1)
             this.keys.push(key)
             return this.cache[key]
@@ -15,7 +15,7 @@ export class LRUCache<T = any, K extends number | string = number> {
         return false
     }
     put (key: K, value: T) {
-        if (this.keys.indexOf(key) > -1) {
+        if (this.keys.includes(key)) {
             this.cache[key] = value;
         } else {
             if (this.keys.length >= this.capacity) {
