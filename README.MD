@@ -20,3 +20,4 @@ yarn test fp
 +   [函数式编程](fp)
 +   [作用域原型相关](scope_proto)
 +   [排序](sort)
++   [加减法模拟](calculator)
