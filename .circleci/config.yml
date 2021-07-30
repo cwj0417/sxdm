@@ -3,9 +3,8 @@ orbs:
   node: circleci/node@4.5.1
 jobs:
   test:
-    executor:
-      name: node/default
-      tag: '13'
+    macos:
+      xcode: 11.3.0
     steps:
       - checkout
       - node/install-packages:
