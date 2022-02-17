@@ -91,7 +91,6 @@ const patch = (oldComp: vnode, newComp: vnode): void => {
                 }
             }
         }
-
     } else {
         oldComp.parent.removeChild(oldComp.node)
         mount(newComp, oldComp.parent)
