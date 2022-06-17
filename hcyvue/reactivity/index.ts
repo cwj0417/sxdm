@@ -9,6 +9,8 @@ const targetMap = new WeakMap<any, Map<string, Set<effectType>>>()
 
 let activeEffect: effectFnType
 
+let effectStack: effectFnType[] = []
+
 const reactive = (obj: object) => {
     return new Proxy(obj, {
         get(target, key: string, receiver) {
@@ -56,9 +58,11 @@ const cleanup = (effect: effectFnType) => {
 const effect = (fn: effectType) => {
     const effectFn: effectFnType = () => {
         activeEffect = effectFn
+        effectStack.push(effectFn)
         cleanup(effectFn)
         fn()
-        activeEffect = null
+        effectStack.pop()
+        activeEffect = effectStack[effectStack.length - 1]
     }
     effectFn.deps = []
     effectFn()

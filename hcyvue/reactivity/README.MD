@@ -21,3 +21,8 @@
 3.  在执行effect前进行cleanup. cleanup动作就是遍历effectFn的deps, 并把当前effect从deps里删除.
 4.  因为在运行effect的时候会添加deps导致死循环. 于是在trigger的时候对deps进行固定: 新建一个set并遍历执行effect.
 
+### `nested effect`
+
+用例: `nested effect`
+问题: 当effect嵌套, 因为只有一个activeEffect, 就会产生依赖错误的问题
+方案: 建立一个effectStack来维护activeEffect.

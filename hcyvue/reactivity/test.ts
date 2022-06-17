@@ -34,3 +34,30 @@ test('clean up', () => {
     obj.text = 'test'
     expect(effectfn).toHaveBeenCalledTimes(2)
 })
+
+test('nested effect', () => {
+    const obj: any = reactive({
+        foo: 1,
+        bar: 1,
+    })
+    const effectOutter = jest.fn(() => {
+        obj.foo
+        console.log(1)
+    })
+    const effectInner = jest.fn(() => {
+        obj.bar
+        console.log(2)
+    })
+    effect(() => {
+        effectOutter()
+        effect(() => {
+            effectInner()
+        })
+    })
+    obj.foo++
+    expect(effectOutter).toHaveBeenCalledTimes(2)
+    expect(effectInner).toHaveBeenCalledTimes(2)
+    obj.bar++
+    expect(effectOutter).toHaveBeenCalledTimes(2)
+    expect(effectInner).toHaveBeenCalledTimes(3)
+})
