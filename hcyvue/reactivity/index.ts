@@ -1,8 +1,13 @@
 type effectType = () => any
 
+type effectFnType = {
+    (): void
+    deps?: Set<effectType>[]
+}
+
 const targetMap = new WeakMap<any, Map<string, Set<effectType>>>()
 
-let activeEffect: effectType
+let activeEffect: effectFnType
 
 const reactive = (obj: object) => {
     return new Proxy(obj, {
@@ -29,6 +34,7 @@ const track = (target: object, key: string) => {
             depsMap.set(key, (deps = new Set))
         }
         deps.add(activeEffect)
+        activeEffect.deps.push(deps)
     }
 }
 
@@ -37,15 +43,25 @@ const trigger = (target: object, key: string) => {
     if (!!depsMap) {
         let deps = depsMap.get(key)
         if (!!deps) {
-            deps.forEach(e => e())
+            const effectsToRun = new Set(deps)
+            effectsToRun.forEach(e => e())
         }
     }
 }
 
+const cleanup = (effect: effectFnType) => {
+    effect.deps.forEach(dep => dep.delete(effect))
+}
+
 const effect = (fn: effectType) => {
-    activeEffect = fn
-    fn()
-    activeEffect = null
+    const effectFn: effectFnType = () => {
+        activeEffect = effectFn
+        cleanup(effectFn)
+        fn()
+        activeEffect = null
+    }
+    effectFn.deps = []
+    effectFn()
 }
 
 export {
