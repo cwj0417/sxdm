@@ -66,6 +66,7 @@ const effect = (fn: effectType) => {
     }
     effectFn.deps = []
     effectFn()
+    return effectFn;
 }
 
 export {

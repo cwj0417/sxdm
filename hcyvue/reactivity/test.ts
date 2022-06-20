@@ -40,24 +40,21 @@ test('nested effect', () => {
         foo: 1,
         bar: 1,
     })
-    const effectOutter = jest.fn(() => {
-        obj.foo
-        console.log(1)
-    })
-    const effectInner = jest.fn(() => {
+    const innerSpy = jest.fn(() => {
         obj.bar
-        console.log(2)
     })
-    effect(() => {
-        effectOutter()
-        effect(() => {
-            effectInner()
-        })
+    const innerEffect = effect(innerSpy)
+    const outerSpy = jest.fn(() => {
+        obj.foo
+        innerEffect()
     })
+    effect(outerSpy)
+    expect(outerSpy).toHaveBeenCalledTimes(1)
+    expect(innerSpy).toHaveBeenCalledTimes(2)
     obj.foo++
-    expect(effectOutter).toHaveBeenCalledTimes(2)
-    expect(effectInner).toHaveBeenCalledTimes(2)
+    expect(outerSpy).toHaveBeenCalledTimes(2)
+    expect(innerSpy).toHaveBeenCalledTimes(3)
     obj.bar++
-    expect(effectOutter).toHaveBeenCalledTimes(2)
-    expect(effectInner).toHaveBeenCalledTimes(3)
+    expect(outerSpy).toHaveBeenCalledTimes(2)
+    expect(innerSpy).toHaveBeenCalledTimes(4)
 })

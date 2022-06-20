@@ -26,3 +26,9 @@
 用例: `nested effect`
 问题: 当effect嵌套, 因为只有一个activeEffect, 就会产生依赖错误的问题
 方案: 建立一个effectStack来维护activeEffect.
+**注意点:** 
+    写用例的时候犯了个错, 浪费了1天时间. 嵌套effect里的内容必须是个稳定的值. 不可以直接执行另一个`effect()`.
+    因为deps的数据结构是一个set, 直接执行`effect()`会产生一个新的`effectFn`, 使deps变得混乱.
+    具体行为是: 每次运行父effect, 子effect就会被多增加一个deps, 之后执行子effect的时候会执行若干次.
+    正确做法是使用`effect()`返回的effectFn来进行嵌套.
+    因为vue内部组件嵌套是vue内部的实现, 所以使用的时候没感觉, 自己写用例就噶了.
