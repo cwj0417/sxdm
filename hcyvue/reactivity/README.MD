@@ -12,7 +12,6 @@
 
 ### cleaup
 
-用例: `clean up`
 问题: 当代码走向分支产生变化, 一些属性就不需要被track了. 如果不cleanup会运行无效的effect影响性能.
 方案: 在每次执行effect前清理deps.
 思路:
@@ -23,7 +22,6 @@
 
 ### `nested effect`
 
-用例: `nested effect`
 问题: 当effect嵌套, 因为只有一个activeEffect, 就会产生依赖错误的问题
 方案: 建立一个effectStack来维护activeEffect.
 **注意点:** 
@@ -32,3 +30,13 @@
     具体行为是: 每次运行父effect, 子effect就会被多增加一个deps, 之后执行子effect的时候会执行若干次.
     正确做法是使用`effect()`返回的effectFn来进行嵌套.
     因为vue内部组件嵌套是vue内部的实现, 所以使用的时候没感觉, 自己写用例就噶了.
+
+### `avoiding infinite effect`
+
+问题: 在effect内对响应式对象进行变化, 又触发了响应式, 导致无限循环. (虽然这个代码是有问题的, 但框架要去避免报错)
+目标: 想方法阻止effect执行内触发新的effect.
+思路: 
+    所有effect其实都被包裹成了effectFn.
+    effectFn会在开始执行的时候设置`activeEffect`变量.
+    所以在trigger后执行deps的effect的时候, 如果activeEffect不为空, 则不执行.
+    考虑到嵌套effect的时候外层是可能有activeEffect的, 所以改为把deps过滤掉与activeEffect相同的deps.

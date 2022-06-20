@@ -1,7 +1,7 @@
 import {
     effect,
     reactive,
-} from './';
+} from './'
 
 test('base reactivity', () => {
     const data = reactive({
@@ -25,8 +25,8 @@ test('clean up', () => {
         text: 'text'
     })
     const effectfn = jest.fn(() => {
-        obj.ok ? obj.text : 'nothing';
-    });
+        obj.ok ? obj.text : 'nothing'
+    })
     effect(() => {
         effectfn()
     })
@@ -57,4 +57,15 @@ test('nested effect', () => {
     obj.bar++
     expect(outerSpy).toHaveBeenCalledTimes(2)
     expect(innerSpy).toHaveBeenCalledTimes(4)
+})
+
+test('avoiding infinite effect', () => {
+    const obj = reactive({
+        count: 1,
+    })
+    const selfIncre = jest.fn(() => {
+        obj.count++
+    })
+    effect(selfIncre)
+    expect(selfIncre).toHaveBeenCalledTimes(1)
 })

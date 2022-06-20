@@ -45,7 +45,12 @@ const trigger = (target: object, key: string) => {
     if (!!depsMap) {
         let deps = depsMap.get(key)
         if (!!deps) {
-            const effectsToRun = new Set(deps)
+            const effectsToRun = new Set<effectType>()
+            deps.forEach(effect => {
+                if (effect !== activeEffect) {
+                    effectsToRun.add(effect)
+                }
+            })
             effectsToRun.forEach(e => e())
         }
     }
