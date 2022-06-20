@@ -4,10 +4,10 @@ import {
 } from './';
 
 test('base reactivity', () => {
-    const data: any = reactive({
+    const data = reactive({
         price: 1,
         amount: 1
-    }) // todo: type
+    })
     let total: number
     effect(() => {
         total = data.price * data.amount
@@ -20,7 +20,7 @@ test('base reactivity', () => {
 })
 
 test('clean up', () => {
-    const obj: any = reactive({
+    const obj = reactive({
         ok: true,
         text: 'text'
     })
@@ -36,7 +36,7 @@ test('clean up', () => {
 })
 
 test('nested effect', () => {
-    const obj: any = reactive({
+    const obj = reactive({
         foo: 1,
         bar: 1,
     })

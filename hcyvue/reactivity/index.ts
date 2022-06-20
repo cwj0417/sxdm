@@ -11,7 +11,7 @@ let activeEffect: effectFnType
 
 let effectStack: effectFnType[] = []
 
-const reactive = (obj: object) => {
+const reactive: <T extends object>(obj: T) => T = (obj) => {
     return new Proxy(obj, {
         get(target, key: string, receiver) {
             track(target, key)
