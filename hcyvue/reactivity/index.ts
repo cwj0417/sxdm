@@ -3,9 +3,14 @@ type effectType = () => any
 type effectFnType = {
     (): void
     deps?: Set<effectType>[]
+    scheduler?: (effect: effectFnType) => void
 }
 
-const targetMap = new WeakMap<any, Map<string, Set<effectType>>>()
+type effectOptionType = {
+    scheduler?: (effect: effectFnType) => void
+}
+
+const targetMap = new WeakMap<any, Map<string, Set<effectFnType>>>()
 
 let activeEffect: effectFnType
 
@@ -45,13 +50,19 @@ const trigger = (target: object, key: string) => {
     if (!!depsMap) {
         let deps = depsMap.get(key)
         if (!!deps) {
-            const effectsToRun = new Set<effectType>()
+            const effectsToRun = new Set<effectFnType>()
             deps.forEach(effect => {
                 if (effect !== activeEffect) {
                     effectsToRun.add(effect)
                 }
             })
-            effectsToRun.forEach(e => e())
+            effectsToRun.forEach(effect => {
+                if (effect.scheduler) {
+                    effect.scheduler(effect)
+                } else {
+                    effect()
+                }
+            })
         }
     }
 }
@@ -60,7 +71,7 @@ const cleanup = (effect: effectFnType) => {
     effect.deps.forEach(dep => dep.delete(effect))
 }
 
-const effect = (fn: effectType) => {
+const effect = (fn: effectType, options: effectOptionType = {}) => {
     const effectFn: effectFnType = () => {
         activeEffect = effectFn
         effectStack.push(effectFn)
@@ -70,6 +81,7 @@ const effect = (fn: effectType) => {
         activeEffect = effectStack[effectStack.length - 1]
     }
     effectFn.deps = []
+    if (options.scheduler) effectFn.scheduler = options.scheduler
     effectFn()
     return effectFn;
 }

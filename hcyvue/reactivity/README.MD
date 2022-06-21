@@ -40,3 +40,8 @@
     effectFn会在开始执行的时候设置`activeEffect`变量.
     所以在trigger后执行deps的effect的时候, 如果activeEffect不为空, 则不执行.
     考虑到嵌套effect的时候外层是可能有activeEffect的, 所以改为把deps过滤掉与activeEffect相同的deps.
+
+### `scheduler`
+
+功能: 使effect的执行可控, 为effect新增第二个参数options, 可以传入scheduler. 如果scheduler存在, 在本应该执行effect的时候改为调用scheduler, 让调用者安排执行时机.
+这个功能是调度更新的基础.
